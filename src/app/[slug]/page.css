@@ -1,0 +1,10 @@
+.link-item {
+    padding: 8px;
+    border: 1px solid #ccc;
+    text-decoration: none;
+    color: #333;
+  }
+  
+  .link-item:hover {
+    background-color: #f0f0f0;
+  }

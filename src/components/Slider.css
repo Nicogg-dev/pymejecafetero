@@ -1,0 +1,12 @@
+/* Slider.css */
+.image-gallery-svg{
+    width: 30px !important;
+    stroke-width: 0.5 !important;
+}
+.image-gallery{
+    width: 100vw;
+}
+.image-gallery-image{
+    object-fit: cover !important;
+
+}
