@@ -1,8 +1,5 @@
-'use client'
-
 import Link from "next/link";
 import "./page.css";
-import { useEffect, useState } from "react";
 import { ProductCard } from "@/components/ProductCard";
 
 const Pym = [
@@ -69,94 +66,66 @@ const Ges = [
     }
 ];
 
+// Define un objeto que mapea cada slug a su respectivo conjunto de productos y contenido adicional
+const productsData = {
+    "pym-eje-cafetero": {
+        title: "PYM | Eje cafetero",
+        products: Pym,
+    },
+    "herbacol-colombia": {
+        title: "Herbacol Colombia",
+        products: Herbacol,
+    },
+    "ges-cosmeticos": {
+        title: "GES Cosméticos",
+        products: Ges,
+    },
+};
+
 const Home = ({ params }) => {
+    const { slug } = params;
 
-    const [slug, setSlug] = useState(params.slug);
+    // Verifica si el slug existe en los datos de productos
+    if (slug in productsData) {
+        const { title, products } = productsData[slug];
 
-    useEffect(() => {
-        setSlug(params.slug);
-    }, [params.slug]);
-
-    return (
-        <div className="grid grid-cols-12 mb-20 min-h-96 h-auto">
-            <section className="min-[0px]:hidden min-[650px]:flex flex-col col-span-4 mt-4">
-
-                <Link className="link-item" href="/pym-eje-cafetero">PYM | Eje cafetero</Link>
-                <Link className="link-item" href="/herbacol-colombia">Herbacol Colombia</Link>
-                <Link className="link-item" href="/ges-cosmeticos">GES Cosméticos</Link>
-                <Link className="link-item" href="/balsamos">Balsamos</Link>
-                <Link className="link-item" href="/corporales">Corporales</Link>
-                <Link className="link-item" href="/faciales">Decolorantes</Link>
-                <Link className="link-item" href="/capilares">Desinfectantes</Link>
-                <Link className="link-item" href="/jabones">Dilusor Esmalte</Link>
-
-            </section>
-
-            <section className="col-span-12 min-[650px]:col-span-8 pl-0 min-[650px]:pl-6 pt-8">
-
-                <div>
-                    {
-                        slug === "pym-eje-cafetero" && (
-                            <>
-                                <div className="ml-2">
-                                    <h4>{slug}</h4>
-                                </div>
-                                <div>
-                                    <input type="text" />
-                                    <input type="text" />
-                                </div>
-                                <div className="grid grid-cols-12 lg:grid-cols-9">
-                                    {Pym.map((product) => (
-                                        <ProductCard key={product.id} product={product} />
-                                    ))}
-                                </div>
-                            </>
-                        )}
-                    {
-                        slug === "herbacol-colombia" && (
-                            <>
-                                <div className="ml-2">
-                                    <h4>{slug}</h4>
-                                </div>
-                                <div>
-                                    <input type="text" />
-                                    <input type="text" />
-                                </div>
-                                <div className="grid grid-cols-12 lg:grid-cols-9">
-                                    {Herbacol.map((product) => (
-                                        <ProductCard key={product.id} product={product} />
-                                    ))}
-                                </div>
-                            </>
-                        )
-                    }
-                    {
-                        slug === "ges-cosmeticos" && (
-                            <>
-                                <div className="ml-2">
-                                    <h4>{slug}</h4>
-                                </div>
-                                <div>
-                                    <input type="text" />
-                                    <input type="text" />
-                                </div>
-                                <div className="grid grid-cols-12 lg:grid-cols-9">
-                                    {Ges.map((product) => (
-                                        <ProductCard key={product.id} product={product} />
-                                    ))}
-                                </div>
-                            </>
-                        )
-                    }
-
-                    {slug !== "pym-eje-cafetero" && slug !== "herbacol-colombia" && slug !== "ges-cosmeticos" && (
-                        <p className="text-2xl font-bold text-center">Not Found</p>
-                    )}
-
-                </div>
-            </section>
-        </div>
-    );
+        return (
+            <div className="grid grid-cols-12 mb-20 min-h-96 h-auto">
+                <section className="min-[0px]:hidden min-[650px]:flex flex-col col-span-4 mt-4">
+                    {/* Renderiza los enlaces para los slugs disponibles */}
+                    {Object.keys(productsData).map((linkSlug) => (
+                        <Link key={linkSlug} href={`/${linkSlug}`}>
+                            <p className={`link-item ${slug === linkSlug ? "font-bold" : ""}`}>{productsData[linkSlug].title}</p>
+                        </Link>
+                    ))}
+                </section>
+                <section className="col-span-12 min-[650px]:col-span-8 pl-0 min-[650px]:pl-6 pt-8">
+                    <div>
+                        {/* Renderiza el título y productos correspondientes al slug */}
+                        <div className="ml-2">
+                            <h4>{title}</h4>
+                        </div>
+                        <div>
+                            <input type="text" />
+                            <input type="text" />
+                        </div>
+                        <div className="grid grid-cols-12 lg:grid-cols-9">
+                            {products.map((product) => (
+                                <ProductCard key={product.id} product={product} />
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            </div>
+        );
+    } else {
+        // Si el slug no coincide con ningún conjunto de datos de productos, muestra un mensaje de "Not Found"
+        return (
+            <div className="text-2xl font-bold text-center">
+                Not Found
+            </div>
+        );
+    }
 };
 
 export default Home;

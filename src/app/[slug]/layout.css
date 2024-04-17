@@ -1,0 +1,4 @@
+/* Añdade una flecha después de los enlaces */
+span::after {
+  content: ">";
+}
