@@ -1,8 +1,9 @@
 import {defineConfig, isDev} from 'sanity'
 import {visionTool} from '@sanity/vision'
 import {structureTool} from 'sanity/structure'
-import {user} from './schemaTypes/user'
 import {getStartedPlugin} from './plugins/sanity-plugin-tutorial'
+
+import {user} from './schemaTypes/user'
 import { products } from './schemaTypes/productos'
 import { category } from './schemaTypes/categories'
 import { informacionGeneral } from './schemaTypes/informacion_general'
