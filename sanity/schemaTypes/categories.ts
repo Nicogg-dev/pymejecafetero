@@ -10,6 +10,11 @@ export const category = [
           type: "string"
         },
         {
+            title: "Slug",
+            name: "slug",
+            type: "string"
+        },
+        {
             title: "Imagen de marca",
             name: "image_marca",
             type: "image"
