@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -9,10 +9,12 @@ import './Nav.css';
 import { useShopping } from "@/context/ShoppingCartContext";
 
 import { FaPhoneAlt, FaUser, FaHeart, FaShoppingCart, FaShare, FaSearch, FaBars, FaTimes } from "react-icons/fa";
+import { client } from "@/utils/sanity/client";
 
 export const Nav = () => {
 
     const { products } = useShopping();
+    const [navOptions,setNavOptions] = useState([])
 
     const [isOpen, setIsOpen] = useState(false);
 
@@ -20,6 +22,22 @@ export const Nav = () => {
         setIsOpen(!isOpen);
     };
 
+    
+
+    useEffect(() => {
+        const fetchPosts = async () => {
+            const posts = await client.fetch(`*[_type == "category"]{
+                nombre,
+                slug,
+                sub_category[] -> { 
+                    nombre
+                }
+              }`)
+            setNavOptions(posts.reverse())
+        }
+        fetchPosts()
+    }, []);
+    
     return (
         <nav className="flex flex-col gap-3">
 
@@ -79,49 +97,20 @@ export const Nav = () => {
                 </div>
                 <div className={`overflow-hidden bg-transparent px-4 transition-all duration-900`} style={{ maxHeight: isOpen ? '1000px' : '0', opacity: isOpen ? '1' : '0' }}>
                     <ul className="py-2">
-                        <li>
-                            <Link className="block py-2" href="/categorias/pym-eje-cafetero">
-                                PYM|Eje Cafetero
-                            </Link>
-                        </li>
-                        <li>
-                            <Link className="block py-2" href="/categorias/herbacol-colombia">
-                                Herbacol Colombia
-                            </Link>
-                        </li>
-                        <li>
-                            <Link className="block py-2" href="/categorias/ges-cosmeticos">
-                                Ges Cosméticos
-                            </Link>
-                        </li>
-                        <li className="relative group m-0-auto">
-                            <a className="flex flex-col py-2 lg:px-3 h-full">
-                                <p>Corporales</p>
-                            </a>
-                            <div className="text-xs absolute left-0 bg-black shadow-lg z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                <Link href="#" className="block px-4 py-2 hover:bg-blue-600">Aceites</Link>
-                                <Link href="#" className="block px-4 py-2 hover:bg-blue-600">Exfoliantes</Link>
-                                <Link href="#" className="block px-4 py-2 hover:bg-blue-600">Geles</Link>
-                                <Link href="#" className="block px-4 py-2 hover:bg-blue-600">Humectantes</Link>
-                                <Link href="#" className="block px-4 py-2 hover:bg-blue-600">Jabones</Link>
-                                <Link href="#" className="block px-4 py-2 text-red-700 hover:bg-blue-600">Mostrar todo: Corporales</Link>
-                            </div>
-                        </li>
-                        <li>
-                            <Link className="block py-2" href="/category2">
-                                Removedores
-                            </Link>
-                        </li>
-                        <li>
-                            <Link className="block py-2" href="/category2">
-                                Shampoos
-                            </Link>
-                        </li>
-                        <li>
-                            <Link className="block py-2" href="/category2">
-                                Tratamientos
-                            </Link>
-                        </li>
+                        {navOptions.map((navOption) => (
+                            <li key={navOption.slug}>
+                                <Link className="block py-2" href={`/categorias/${navOption.slug}`}>
+                                    {navOption.nombre}
+                                </Link>
+                                <div className="text-xs absolute left-0 bg-black shadow-lg z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                    {navOption.sub_category?.map((subCategory) => (
+                                        <Link key={subCategory.nombre} href={`/categorias/${navOption.slug}/${subCategory.nombre}`} className="block px-4 py-2 hover:bg-blue-600">{subCategory.nombre}</Link>
+                                    ))}
+                                    {navOption.sub_category?.length > 0 ? <Link href="#" className="block px-4 py-2 text-red-700 hover:bg-blue-600">Mostrar todo: {navOption.nombre}</Link>:null}
+                                </div>
+                            </li>
+                        ))}
+                
                         <li>
                             <Link className="block py-2" href="/category2">
                                 Todos
@@ -134,57 +123,19 @@ export const Nav = () => {
             {/* PANTALLAS MEDIANAS */}
             <ul className="min-[0px]:hidden min-[650px]:flex mx-5 md:mx-20 rounded-md bg-blue-500 md:bg-gradient-to-b md:from-blue-500 md:to-blue-400 text-white text-sm">
 
-                <Link className="flex flex-col justify-center hover:bg-blue-600 rounded-l-md border-l-1 px-1 py-2 lg:px-3" href="/pym-eje-cafetero">
-                    <p>PYM|Eje Cafetero</p>
-                </Link>
-                <Link className="flex flex-col justify-center hover:bg-blue-600 px-1 py-2 lg:px-3" href="herbacol-colombia">
-                    <p>Herbacol Colombia</p>
-                </Link>
-                <Link className="flex flex-col justify-center hover:bg-blue-600 px-1 py-2 lg:px-3" href="ges-cosmeticos">
-                    <p>Ges Cosméticos</p>
-                </Link>
-
-                <li className="relative group m-0-auto">
-                    <a href="#" className="hover:bg-blue-600 flex flex-col text-center items-center justify-center px-1 py-2 lg:px-3 h-full">
-                        <p>Corporales</p>
-                    </a>
-                    <div className="text-xs absolute left-0 bg-black shadow-lg z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <Link href="#" className="block px-4 py-2 hover:bg-blue-600">Aceites</Link>
-                        <Link href="#" className="block px-4 py-2 hover:bg-blue-600">Exfoliantes</Link>
-                        <Link href="#" className="block px-4 py-2 hover:bg-blue-600">Geles</Link>
-                        <Link href="#" className="block px-4 py-2 hover:bg-blue-600">Humectantes</Link>
-                        <Link href="#" className="block px-4 py-2 hover:bg-blue-600">Jabones</Link>
-                        <Link href="#" className="block px-4 py-2 text-red-700 hover:bg-blue-600">Mostrar todo: Corporales</Link>
-                    </div>
-                </li>
-
-                <li className="relative group m-0-auto">
-                    <a href="#" className="hover:bg-blue-600 flex flex-col text-center items-center justify-center px-1 py-2 lg:px-3 h-full">
-                        <p>Removedores</p>
-                    </a>
-                    <div className="text-xs absolute left-0 bg-black shadow-lg z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <Link href="#" className="block px-4 py-2 hover:bg-blue-600">Callos</Link>
-                        <Link href="#" className="block px-4 py-2 hover:bg-blue-600">Cuticula</Link>
-                        <Link href="#" className="block px-4 py-2 hover:bg-blue-600">Esmalte</Link>
-                        <Link href="#" className="block px-4 py-2 text-red-700 hover:bg-blue-600">Mostrar todo: Corporales</Link>
-                    </div>
-                </li>
-
-                <Link className="flex flex-col justify-center hover:bg-blue-600 px-1 py-2 lg:px-3" href="shampoos">
-                    <p>Shampoos</p>
-                </Link>
-
-                <li className="relative group m-0-auto">
-                    <a href="#" className="hover:bg-blue-600 flex flex-col text-center items-center justify-center px-1 py-2 lg:px-3 h-full">
-                        <p>Tratamientos</p>
-                    </a>
-                    <div className="text-xs absolute left-0 bg-black shadow-lg z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <Link href="#" className="block px-4 py-2 hover:bg-blue-600">Capilares</Link>
-                        <Link href="#" className="block px-4 py-2 hover:bg-blue-600">Facial</Link>
-                        <Link href="#" className="block px-4 py-2 hover:bg-blue-600">Uñas</Link>
-                        <Link href="#" className="block px-4 py-2 text-red-700 hover:bg-blue-600">Mostrar todo: Corporales</Link>
-                    </div>
-                </li>
+                {navOptions.map((navOption) => (
+                    <li key={navOption.slug} className="relative group m-0-auto">
+                        <Link className="hover:bg-blue-600 flex flex-col text-center items-center justify-center px-1 py-2 lg:px-3 h-full" href={`/categorias/${navOption.slug}`}>
+                            <p>{navOption.nombre}</p>
+                        </Link>
+                        <div className="text-xs absolute left-0 bg-black shadow-lg z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            {navOption.sub_category?.map((subCategory) => (
+                                <Link key={subCategory.nombre} href={`/categorias/${navOption.slug}/${subCategory.nombre}`} className="block px-4 py-2 hover:bg-blue-600">{subCategory.nombre}</Link>
+                            ))}
+                            {navOption.sub_category?.length > 0 ? <Link href="#" className="block px-4 py-2 text-red-700 hover:bg-blue-600">Mostrar todo: {navOption.nombre}</Link>:null}
+                        </div>
+                    </li>
+                ))}
 
                 <Link className="flex flex-col justify-center hover:bg-blue-600 px-1 py-2 lg:px-3 rounded-r-md" href="todos">
                     <p>Todos</p>
