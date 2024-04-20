@@ -94,7 +94,7 @@ const Home = ({ params }) => {
                 <section className="min-[0px]:hidden min-[650px]:flex flex-col col-span-4 mt-4">
                     {/* Renderiza los enlaces para los slugs disponibles */}
                     {Object.keys(productsData).map((linkSlug) => (
-                        <Link key={linkSlug} href={`/${linkSlug}`}>
+                        <Link key={linkSlug} href={`/categorias/${linkSlug}`}>
                             <p className={`link-item ${slug === linkSlug ? "font-bold" : ""}`}>{productsData[linkSlug].title}</p>
                         </Link>
                     ))}

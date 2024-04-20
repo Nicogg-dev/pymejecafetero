@@ -80,17 +80,17 @@ export const Nav = () => {
                 <div className={`overflow-hidden bg-transparent px-4 transition-all duration-900`} style={{ maxHeight: isOpen ? '1000px' : '0', opacity: isOpen ? '1' : '0' }}>
                     <ul className="py-2">
                         <li>
-                            <Link className="block py-2" href="/pym-eje-cafetero">
+                            <Link className="block py-2" href="/categorias/pym-eje-cafetero">
                                 PYM|Eje Cafetero
                             </Link>
                         </li>
                         <li>
-                            <Link className="block py-2" href="/herbacol-colombia">
+                            <Link className="block py-2" href="/categorias/herbacol-colombia">
                                 Herbacol Colombia
                             </Link>
                         </li>
                         <li>
-                            <Link className="block py-2" href="/ges-cosmeticos">
+                            <Link className="block py-2" href="/categorias/ges-cosmeticos">
                                 Ges Cosméticos
                             </Link>
                         </li>
